@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 export const apiaut = axios.create({
     baseURL: "http://localhost:8080/api/auth",
     timeout: 10000, // 10 seconds timeout,
@@ -8,6 +7,10 @@ export const apiaut = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
+});
+
+export const axiosConfig = axios.create({
+    baseURL: "http://localhost:8080/api",
 });
 export const registerUser = async (userData) => {
     try {
@@ -35,20 +38,14 @@ export const registerUser = async (userData) => {
     }
 };
 
-
-
 export const loginUser = async (loginData) => {
     try {
         const response = await apiaut.post("/login", loginData);
         if (response.status === 200) {
-
             return response.data;
-
         } else {
-            alert("Login failed")
+            alert("Login failed");
         }
-
-
     } catch (error) {
         console.error("❌ Lỗi đăng nhập:", error);
         if (error.response) {
@@ -61,19 +58,17 @@ export const loginUser = async (loginData) => {
             console.error("⚠️ Lỗi cấu hình request:", error.message);
             throw "Có lỗi xảy ra khi gửi yêu cầu!";
         }
-
     }
 };
 
 export const apiCategory = axios.create({
     baseURL: "http://localhost:8080",
-
 });
 
 // Hàm gọi API trả về danh sách danh mục
 export const getPopular = async () => {
     try {
-        const response = await apiCategory.get("/shop_quanao");  // Đợi dữ liệu trả về
+        const response = await apiCategory.get("/shop_quanao"); // Đợi dữ liệu trả về
         console.log("✅ Lấy danh mục thành công:", response.data);
         return response.data;
     } catch (error) {
@@ -83,7 +78,7 @@ export const getPopular = async () => {
 };
 export const getShopcategory = async () => {
     try {
-        const response = await apiCategory.get("/api/categories/");  // Đợi dữ liệu trả về
+        const response = await apiCategory.get("/api/categories/"); // Đợi dữ liệu trả về
         console.log("✅ Lấy danh mục thành công:", response.data);
         return response.data;
     } catch (error) {
@@ -91,6 +86,3 @@ export const getShopcategory = async () => {
         throw error;
     }
 };
-
-
-

@@ -6,109 +6,106 @@ import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Navbar.css";
+import categoryService from "../../services/categoryService";
+import { useQuery } from "@tanstack/react-query";
+import { Flex, Input, Menu, Spin } from "antd";
+
 export const Navbar = () => {
-  const { searchQuery, handleSearch, userId, addCart, isLoggedIn, userName } =
-    useContext(ShopContext);
+    const { searchQuery, handleSearch, userId, addCart, isLoggedIn, userName } =
+        useContext(ShopContext);
 
-  console.log("isLogger", isLoggedIn);
+    const [cart, setCart] = useState(""); // Quản lý menu đang chọn
 
-  const [menu, setMenu] = useState(""); // Quản lý menu đang chọn
-  const [cart, setCart] = useState(""); // Quản lý menu đang chọn
+    const { data: categories, isLoading } = useQuery({
+        queryKey: ["/categories/all"],
+        queryFn: () => categoryService.getCategories(),
+        select: (data) => {
+            return data?.data ? JSON.parse(data.data) : null;
+        },
+    });
 
-  const [categories, setCategories] = useState([]); // Lưu danh sách category từ API
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/categories/"
-        );
-        const jsonData = response.data; // API trả về một object
-        const categoriesArray = JSON.parse(jsonData.data); // Giải mã chuỗi JSON trong `data`
+    useEffect(() => {
+        const cartTotl = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8080/api/cart/cart-items/${userId}/quantities`
+                );
+                const jsonData = response.data;
+                console.log("cart", jsonData);
 
-        setCategories(categoriesArray); // Lưu danh mục vào state
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+                const cartTotl = JSON.parse(jsonData.data);
+                setCart(cartTotl);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+        cartTotl();
+    }, [addCart]);
 
-    fetchCategories();
-  }, []);
+    return (
+        <Flex vertical>
+            <div className="nav">
+                <div className="nav-lerf">
+                    <ul className="nav-menu">
+                        {isLoading ? (
+                            <Spin />
+                        ) : (
+                            <Menu
+                                mode="horizontal"
+                                defaultSelectedKeys={["whatever"]}
+                            >
+                                <Menu.Item key="whatever">
+                                    <Link to={`/`}>Whatever</Link>
+                                </Menu.Item>
+                                <Menu.Item key="shop">
+                                    <Link to={`/shop`}>Shop</Link>
+                                </Menu.Item>
 
-  useEffect(() => {
-    const cartTotl = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/cart/cart-items/${userId}/quantities`
-        );
-        const jsonData = response.data;
-        console.log("cart", jsonData);
+                                {categories?.map((category) => (
+                                    <Menu.Item key={category.categoryId}>
+                                        <Link
+                                            to={`/category?p=${category.categoryId}`}
+                                        >
+                                            {category.categoriesName}
+                                        </Link>
+                                    </Menu.Item>
+                                ))}
+                            </Menu>
+                        )}
+                    </ul>
+                </div>
 
-        const cartTotl = JSON.parse(jsonData.data);
-        setCart(cartTotl);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    cartTotl();
-  }, [addCart]);
-
-  return (
-    <div className="nav">
-      <div className="nav-lerf">
-        <ul className="nav-menu">
-          {Array.isArray(categories) &&
-            categories
-              .filter((category) => category.categoryId <= 6)
-              .map((category) => (
-                <li
-                  key={category.categoryId}
-                  onClick={() => setMenu(category.categoriesName)}
-                >
-                  <Link
-                    style={{ textDecoration: "none", color: "black" }}
-                    to={`/${category.categoriesName.toLowerCase()}`}
-                  >
-                    {category.categoriesName}
-                  </Link>
-                  {menu === category.categoriesName ? <hr /> : null}
-                </li>
-              ))}
-        </ul>
-      </div>
-
-      <div className="nav-right">
-        <div className="nav-right-input">
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="search-input"
-          />
-          <label htmlFor="search">
-            <IoIosSearch size="30px" />
-          </label>
-        </div>
-        <div className="nav-right-login-cart">
-          {isLoggedIn ? (
-            <span className="nav-username">{userName}</span>
-          ) : (
-            <Link
-              style={{ textDecoration: "none", color: "inherit" }}
-              to={"/registerSingin"}
-            >
-              <FaRegUser fontSize="25px" />
-            </Link>
-          )}
-          <Link
-            style={{ textDecoration: "none", color: "inherit" }}
-            to={"/cart"}
-          >
-            <MdOutlineShoppingCart size="30px" />
-          </Link>
-          <div className="nav-cart-accourt">{cart}</div>
-        </div>
-      </div>
-    </div>
-  );
+                <div className="nav-right">
+                    <Input.Search
+                        size="large"
+                        placeholder="Tìm kiếm sản phẩm"
+                        value={searchQuery}
+                        onChange={(e) => handleSearch(e.target.value)}
+                    />
+                    <div className="nav-right-login-cart">
+                        {isLoggedIn ? (
+                            <span className="nav-username">{userName}</span>
+                        ) : (
+                            <Link
+                                style={{
+                                    textDecoration: "none",
+                                    color: "inherit",
+                                }}
+                                to={"/registerSingin"}
+                            >
+                                <FaRegUser fontSize="25px" />
+                            </Link>
+                        )}
+                        <Link
+                            style={{ textDecoration: "none", color: "inherit" }}
+                            to={"/cart"}
+                        >
+                            <MdOutlineShoppingCart size="30px" />
+                        </Link>
+                        <div className="nav-cart-accourt">{cart}</div>
+                    </div>
+                </div>
+            </div>
+        </Flex>
+    );
 };
