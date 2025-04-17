@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
     Button,
     Flex,
+    Image,
     Input,
     message,
     Modal,
@@ -52,9 +53,10 @@ const ProductList = () => {
             dataIndex: "images",
             key: "images",
             render: (images) => {
-                const primaryImage = images.find((img) => img.isPrimary);
+                const primaryImage = images[0];
+                console.log(primaryImage);
                 return primaryImage ? (
-                    <img
+                    <Image
                         src={`${primaryImage?.productImage}`}
                         alt="Product"
                         style={{ width: 50 }}
@@ -80,7 +82,7 @@ const ProductList = () => {
             title: "Giá",
             dataIndex: "price",
             key: "price",
-            render: (price) => `$${price.toFixed(2)}`,
+            render: (price) => `${price.toFixed(2)}đ`,
         },
         {
             title: "Danh mục",

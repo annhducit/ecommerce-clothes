@@ -58,6 +58,7 @@ const ProductDisplay = (props) => {
 
     const primaryImage = product?.images[0];
 
+    console.log(product);
     return (
         <div className="productDisplay">
             <div className="productDisplay-left">
@@ -65,9 +66,8 @@ const ProductDisplay = (props) => {
                     {product.images?.length > 0 && (
                         <img
                             src={
-                                primaryImage
-                                    ? `${primaryImage.productImage}`
-                                    : "/public/images/products/men1.png"
+                                `${primaryImage?.productImage}` ||
+                                "/public/images/products/men1.png"
                             }
                             alt="Product"
                         />
@@ -78,7 +78,7 @@ const ProductDisplay = (props) => {
             <div className="productDisplay-right">
                 <div className="productDisplay-right-name">
                     <h1>{product.productsName}</h1>
-                    <h1>${product.price}</h1>
+                    <h1>${product.price * 0.25}</h1>
                     <h1>{product.categoryName}</h1>
                     <p>Inventory: {product.stockQuantity}</p>
                 </div>

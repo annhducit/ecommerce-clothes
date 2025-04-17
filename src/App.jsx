@@ -41,7 +41,6 @@ function App() {
                         <Route index element={<Whatever />} />
                         <Route path="/shop" element={<Popular />} />
                         <Route path="/category" element={<Category />} />
-                        {/* <Route path="/features" element={<Features />} /> */}
 
                         <Route path="/product" element={<Product />}>
                             <Route path=":productId" element={<Product />} />

@@ -60,6 +60,9 @@ export const Navbar = () => {
                                 <Menu.Item key="shop">
                                     <Link to={`/shop`}>Shop</Link>
                                 </Menu.Item>
+                                <Menu.Item key="support">
+                                    <Link to={`/support`}>Support</Link>
+                                </Menu.Item>
 
                                 {categories?.map((category) => (
                                     <Menu.Item key={category.categoryId}>

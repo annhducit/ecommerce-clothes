@@ -3,18 +3,6 @@ import "./Item.css";
 import { Link } from "react-router-dom";
 
 const Item = (prop) => {
-    const [salePrice, setSalePrice] = useState(0);
-
-    useEffect(() => {
-        // Generate a random discount between 10% and 30%
-        const discountPercent = Math.floor(Math.random() * 21) + 10; // 10-30%
-        const calculatedSalePrice = (
-            ((prop.new_price * (100 - discountPercent)) / 100) *
-            25
-        ).toFixed(2);
-        setSalePrice(calculatedSalePrice);
-    }, [prop.new_price]);
-
     return (
         <div className="item">
             <Link to={`/product/${prop.id}`}>
@@ -31,11 +19,11 @@ const Item = (prop) => {
             <p>{prop.name}</p>
             <div className="item-prices">
                 <div className="item-prices-old">
-                    <p>{(prop.new_price * 25).toLocaleString()}đ</p>
+                    <p>${prop.new_price}</p>
                 </div>
                 <div className="item-prices-new">
                     <p style={{ fontWeight: "600", color: "#ff0000" }}>
-                        {salePrice} đ
+                        ${prop.new_price * 0.25}
                     </p>
                 </div>
             </div>

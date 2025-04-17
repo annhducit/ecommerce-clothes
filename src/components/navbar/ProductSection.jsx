@@ -33,7 +33,7 @@ const ProductSection = () => {
                             stockQuantity={item.stockQuantity}
                             name={item.productsName}
                             variant={item.variants?.[4]?.size || "N/A"}
-                            image={`/${item.images[0].imageUrl}`}
+                            image={`${item.images[0].productImage}`}
                             new_price={item.price}
                         />
                     ))

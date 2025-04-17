@@ -245,7 +245,7 @@ const CartItem = () => {
                     <div className="classIem-format-main-bottom-right-sub">
                         <p>Subtotal</p>
                         <p style={{ fontWeight: "800", color: "red" }}>
-                            {cartTotalAmount.toLocaleString()}
+                            {cartTotalAmount.toLocaleString()}đ
                         </p>
                     </div>
                     <Link style={{ textDecoration: "none" }} to="/payment">

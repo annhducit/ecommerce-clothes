@@ -111,12 +111,11 @@ const ProductNew = () => {
                                 ]}
                             >
                                 <InputNumber
-                                    min={0}
-                                    step={0.01}
+                                    type="number"
                                     className="w-full"
                                     formatter={(value) => `${value}$`}
                                     parser={(value) =>
-                                        value.replace(/\$\s?|(,*)/g, "")
+                                        value.replace(/\đ\s?|(,*)/g, "")
                                     }
                                     placeholder="Nhập giá sản phẩm"
                                 />
